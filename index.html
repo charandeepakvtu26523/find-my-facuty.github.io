@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Faculty Finder</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-chalkboard-teacher"></i> FIND MY FACULITY</h1>
+            <p>Find and connect with faculty members easily</p>
+           
+        </header>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by name, department, or specialization...">
+                <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
+                <button id="resetBtn"><i class="fas fa-redo"></i> Reset</button>
+            </div>
+            
+            <div class="filters">
+                <select id="departmentFilter">
+                    <option value="">All Departments</option>
+                    <!-- Dynamically populated -->
+                </select>
+                
+                <select id="designationFilter">
+                    <option value="">All Designations</option>
+                    <option value="Professor">Professor</option>
+                    <option value="Associate Professor">Associate Professor</option>
+                    <option value="Assistant Professor">Assistant Professor</option>
+                    <option value="Lecturer">Lecturer</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <img src="assets/loading.gif" alt="Loading...">
+            <p>Loading faculty data...</p>
+        </div>
+
+        <!-- Faculty Results -->
+        <div class="faculty-container" id="facultyContainer"></div>
+
+        <footer class="footer">
+            <p>&copy; 2023 College Management System | Developed with <i class="fas fa-heart"></i></p>
+        </footer>
+    </div>
+
+    <!-- Faculty Details Modal -->
+    <div class="modal" id="facultyModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- ✅ Directly load faculty.json to check connection -->
+    <script>
+        fetch("faculty.json")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Faculty JSON not found!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("✅ Faculty data loaded:", data);
+                // Here we pass data to script.js
+                window.facultyData = data;
+                document.dispatchEvent(new Event("facultyDataLoaded"));
+            })
+            .catch(error => {
+                document.getElementById("facultyContainer").innerHTML = `
+                    <div style="color:red; font-weight:bold; padding:10px;">
+                        ❌ Failed to load faculty data!<br>${error.message}
+                    </div>`;
+                console.error(error);
+            });
+    </script>
+
+    <!-- SheetJS library -->
+    <script src="assets/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
